@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Swashbuckle.AspNetCore.Swagger;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Winterdom.KeyVaultApi {
   public class Startup {
@@ -23,12 +26,25 @@ namespace Winterdom.KeyVaultApi {
       // Add framework services.
       services.AddMvc();
       services.AddSingleton<IConfiguration>(Configuration);
-      services.AddAuthentication()
-              .AddJwtBearer(options => {
-                options.Authority = Configuration["Auth:Authority"];
-                options.Audience = Configuration["Auth:Audience"];
-                options.SaveToken = true;
-              });
+      services.AddAuthentication(o => {
+        o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+      }).AddJwtBearer(options => {
+        options.Authority = Configuration["Auth:Authority"];
+        options.Audience = Configuration["Auth:Audience"];
+        options.SaveToken = true;
+        // hack: don't validate issuers for now to support multi-tenant
+        options.TokenValidationParameters.ValidateIssuer = false;
+      });
+      services.AddSwaggerGen(c => {
+        c.SwaggerDoc("v1", new Info { Title = "KeyVaultController", Version = "v1" });
+        c.AddSecurityDefinition("AAD", new OAuth2Scheme {
+          AuthorizationUrl = "https://login.windows.net/common/oauth2/authorize",
+          TokenUrl = "https://login.windows.net/common/oauth2/token",
+          Flow = "accessCode",
+          Scopes = new Dictionary<String, String>()
+        });
+      });
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -38,6 +54,11 @@ namespace Winterdom.KeyVaultApi {
 
       app.UseAuthentication();
       app.UseMvc();
+      app.UseSwagger();
+      app.UseSwaggerUI(c => {
+        c.RoutePrefix = "/swagger/ui";
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Key Vault Connector");
+      });
     }
   }
 }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace Winterdom.KeyVaultApi
 {
@@ -18,6 +19,11 @@ namespace Winterdom.KeyVaultApi
                 .UseIISIntegration()
                 .UseStartup<Startup>()
                 .UseApplicationInsights()
+                .ConfigureLogging((hostingContext, logging) => {
+                  logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
+                  logging.AddConsole();
+                  logging.AddDebug();
+                })
                 .Build();
 
             host.Run();
