@@ -44,6 +44,9 @@ namespace Winterdom.KeyVaultApi {
           Flow = "accessCode",
           Scopes = new Dictionary<String, String>()
         });
+        //c.SchemaFilter<SummaryFilter>();
+        c.OperationFilter<SummaryFilter>();
+        c.OperationFilter<DescriptionFilter>();
       });
     }
 
