@@ -38,7 +38,7 @@ namespace Winterdom.KeyVaultApi.Controllers {
           });
         }
 
-        secrets = await client.GetSecretVersionsNextAsync(secrets.NextPageLink);
+        secrets = await client.GetSecretsNextAsync(secrets.NextPageLink);
       } while ( !String.IsNullOrEmpty(secrets.NextPageLink) );
       return results;
     }
