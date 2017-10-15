@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.KeyVault;
 using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore.Authorization;
-using Swashbuckle.AspNetCore.SwaggerGen;
 using Microsoft.Extensions.Logging;
-using Winterdom.KeyVaultApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading.Tasks;
+using Winterdom.KeyVaultApi.Models;
 
 namespace Winterdom.KeyVaultApi.Controllers {
   [Route("api/{vaultName}/[controller]")]

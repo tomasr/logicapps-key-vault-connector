@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Swagger;
+using System;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Winterdom.KeyVaultApi {
   public class Startup {
@@ -51,9 +51,6 @@ namespace Winterdom.KeyVaultApi {
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory) {
-      loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-      loggerFactory.AddDebug();
-
       app.UseAuthentication();
       app.UseMvc();
       app.UseSwagger();
