@@ -22,27 +22,25 @@ function New-Password {
 $baseUrl = "https://${apiAppName}.azurewebsites.net/"
 $appId = "https://${tenantDomain}/$applicationName"
 
-$app = New-AzureRmADApplication -DisplayName $applicationName `
+$app = New-AzureRmADApplication -DisplayName "$applicationName Connector" `
                                 -HomePage $baseUrl `
                                 -IdentifierUris $appId `
                                 -ReplyUrls $baseUrl `
                                 -AvailableToOtherTenants $true
 
 $applicationKey = New-Password
-
-$credential = New-AzureRmADAppCredential -ObjectId $app.ObjectId -Password $applicationKey   
+$credential = New-AzureRmADServicePrincipal -ApplicationId $app.ApplicationId -Password $applicationKey   
 
 [PSCustomObject]@{
-  Application = "WebApi";
-  ObjectId = $app.ObjectId;
+  Application = "WebApi Connector";
   ApplicationId = $app.ApplicationId;
   ApplicationKey = $applicationKey
 }
 
-# Create the Connector application that will be used by LogicApps
+# Create the client application that will be used by LogicApps
 $clientAppId = "https://${tenantDomain}/${applicationName}-connector"
 $clientKey = New-Password
-$clientApp = New-AzureRmADApplication -DisplayName "$applicationName Connector" `
+$clientApp = New-AzureRmADApplication -DisplayName "$applicationName Connector Client" `
                                       -HomePage "https://login.windows.net" `
                                       -IdentifierUris $clientAppId `
                                       -ReplyUrls "https://msmanaged-na.consent.azure-apim.net/redirect"
@@ -51,11 +49,7 @@ $clientApp = New-AzureRmADApplication -DisplayName "$applicationName Connector" 
 $clientCredential = New-AzureRmADAppCredential -ObjectId $clientApp.ObjectId -Password $clientKey
 
 [PSCustomObject]@{
-  Application = "Connector";
-  ObjectId = $clientApp.ObjectId;
+  Application = "Client";
   ApplicationId = $clientApp.ApplicationId;
   ApplicationKey = $clientKey
 }
-
-# now grant permissions
-# TODO: would be something like: http://www.redbaronofazure.com/?p=7197

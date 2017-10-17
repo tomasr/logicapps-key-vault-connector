@@ -21,7 +21,7 @@ namespace Winterdom.KeyVaultApi {
                            .OfType<SummaryAttribute>()
                            .FirstOrDefault();
       if ( summary != null ) {
-        operation.Extensions["x-ms-summary"] = summary.Summary;
+        operation.Summary = summary.Summary;
       }
     }
   }

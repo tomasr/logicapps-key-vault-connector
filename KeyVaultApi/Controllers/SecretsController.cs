@@ -20,7 +20,7 @@ namespace Winterdom.KeyVaultApi.Controllers {
     }
 
     [HttpGet()]
-    [SwaggerOperation(OperationId = "List Secrets")]
+    [SwaggerOperation(OperationId = "ListSecrets")]
     [Summary("Lists all secrets")]
     [Description("Lists the secrets stored in Key Vault")]
     public  async Task<IEnumerable<Secret>> Get(String vaultName) {
@@ -43,7 +43,7 @@ namespace Winterdom.KeyVaultApi.Controllers {
     }
 
     [HttpGet("{name}")]
-    [SwaggerOperation(OperationId = "Get Secret")]
+    [SwaggerOperation(OperationId = "GetSecret")]
     [SwaggerResponse(200, typeof(SecretValue))]
     [SwaggerResponse(404, description: "Secret not found")]
     [Summary("Get the value of a secret")]
